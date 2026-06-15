@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VidyaBot — Engineering Study & Exam Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E1F33;
+    --navy-deep:#081320;
+    --cyan:#3FD0E0;
+    --amber:#F2A93B;
+    --paper:#F6F4ED;
+    --ink:#1B2430;
+    --line:rgba(63,208,224,0.18);
+    --radius:10px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:32px 32px;
+  }
+  h1,h2,h3,.brand{font-family:'Space Grotesk',sans-serif;}
+  code, .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* Header */
+  header{
+    background:var(--navy);
+    color:var(--paper);
+    padding:18px 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    border-bottom:3px solid var(--cyan);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{font-size:1.6rem;font-weight:700;letter-spacing:0.5px;display:flex;align-items:center;gap:10px;}
+  .brand .node{
+    width:14px;height:14px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 0 4px rgba(63,208,224,0.15);
+  }
+  nav{display:flex;gap:22px;flex-wrap:wrap;}
+  nav a{
+    color:var(--paper);text-decoration:none;font-size:0.92rem;font-weight:500;
+    opacity:0.85;border-bottom:2px solid transparent;padding-bottom:4px;transition:.2s;
+  }
+  nav a:hover, nav a:focus{opacity:1;border-bottom-color:var(--amber);}
+
+  /* Hero */
+  .hero{
+    padding:70px 5% 50px;
+    display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;
+  }
+  .hero-text{max-width:620px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;color:var(--navy);
+    background:rgba(63,208,224,0.18);display:inline-block;
+    padding:4px 10px;border-radius:5px;font-size:0.78rem;letter-spacing:1px;
+    margin-bottom:14px;
+  }
+  .hero h1{font-size:3rem;line-height:1.1;margin-bottom:16px;color:var(--navy);}
+  .hero h1 span{color:var(--cyan);-webkit-text-stroke:1px var(--navy);}
+  .hero p{font-size:1.08rem;line-height:1.6;color:#3c4858;margin-bottom:26px;}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;
+    padding:13px 26px;border-radius:var(--radius);border:2px solid var(--navy);
+    cursor:pointer;transition:.2s;text-decoration:none;display:inline-block;
+  }
+  .btn-primary{background:var(--navy);color:var(--paper);}
+  .btn-primary:hover{background:var(--cyan);color:var(--navy);border-color:var(--cyan);}
+  .btn-ghost{background:transparent;color:var(--navy);}
+  .btn-ghost:hover{background:var(--navy);color:var(--paper);}
+
+  /* Circuit signature graphic */
+  .circuit{width:340px;flex-shrink:0;}
+  .circuit svg{width:100%;height:auto;}
+  .pulse{animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:0.35;}50%{opacity:1;}}
+
+  /* Section shell */
+  section.module{
+    padding:50px 5%;
+    border-top:1px solid var(--line);
+  }
+  .module-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;flex-wrap:wrap;}
+  .module-head .tag{
+    font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--navy);
+    background:var(--cyan);padding:3px 9px;border-radius:5px;font-weight:600;
+  }
+  .module-head h2{font-size:1.8rem;color:var(--navy);}
+  .module-sub{color:#566073;max-width:640px;margin-bottom:24px;font-size:0.96rem;}
+
+  /* Subjects / Notes */
+  .subject-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+  .subject-tab{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.88rem;
+    padding:8px 16px;border:2px solid var(--navy);border-radius:999px;
+    background:transparent;color:var(--navy);cursor:pointer;transition:.18s;
+  }
+  .subject-tab.active{background:var(--navy);color:var(--paper);}
+  .accordion{display:flex;flex-direction:column;gap:10px;}
+  .acc-item{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  }
+  .acc-head{
+    width:100%;text-align:left;background:none;border:none;cursor:pointer;
+    padding:15px 18px;display:flex;justify-content:space-between;align-items:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--navy);font-size:0.98rem;
+  }
+  .acc-head:hover{background:rgba(63,208,224,0.07);}
+  .acc-head .arrow{transition:transform .2s;color:var(--amber);font-size:1.1rem;}
+  .acc-item.open .arrow{transform:rotate(45deg);}
+  .acc-body{
+    max-height:0;overflow:hidden;transition:max-height .25s ease;
+    padding:0 18px;color:#46506699;
+  }
+  .acc-item.open .acc-body{padding:0 18px 18px;}
+  .acc-body p, .acc-body li{font-size:0.92rem;line-height:1.65;color:#3c4858;}
+  .acc-body ul{margin-left:18px;margin-top:8px;}
+  .acc-body code{background:var(--paper);padding:2px 6px;border-radius:4px;font-size:0.85rem;}
+
+  /* Flashcards */
+  .flash-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;align-items:center;}
+  select, input[type="text"]{
+    font-family:'Inter',sans-serif;padding:10px 14px;border:2px solid var(--navy);
+    border-radius:var(--radius);background:#fff;color:var(--ink);font-size:0.92rem;
+  }
+  .flash-stage{display:flex;justify-content:center;margin-bottom:18px;}
+  .flashcard{
+    width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;
+  }
+  .flashcard-inner{
+    width:100%;height:100%;position:relative;transition:transform .5s;transform-style:preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+  .flash-face{
+    position:absolute;width:100%;height:100%;backface-visibility:hidden;
+    border:2px solid var(--navy);border-radius:14px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;background:#fff;
+  }
+  .flash-front{background:var(--navy);color:var(--paper);}
+  .flash-back{transform:rotateY(180deg);}
+  .flash-face .lbl{font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:2px;opacity:0.6;margin-bottom:10px;}
+  .flash-face .txt{font-size:1.15rem;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .flash-nav{display:flex;justify-content:center;gap:12px;}
+  .flash-counter{
+    text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#566073;margin-top:10px;
+  }
+
+  /* Quiz */
+  .quiz-box{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;max-width:680px;
+  }
+  .quiz-q{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;margin-bottom:16px;color:var(--navy);}
+  .quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+  .quiz-opt{
+    text-align:left;padding:12px 16px;border:2px solid var(--line);border-radius:8px;
+    background:var(--paper);cursor:pointer;font-size:0.94rem;transition:.15s;
+  }
+  .quiz-opt:hover{border-color:var(--cyan);}
+  .quiz-opt.correct{border-color:#2EAE6E;background:rgba(46,174,110,0.12);font-weight:600;}
+  .quiz-opt.wrong{border-color:#E0584A;background:rgba(224,88,74,0.12);}
+  .quiz-opt:disabled{cursor:default;}
+  .quiz-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .quiz-score{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--navy);}
+  .feedback{font-size:0.9rem;margin-top:4px;min-height:20px;font-weight:600;}
+  .feedback.ok{color:#2EAE6E;}
+  .feedback.bad{color:#E0584A;}
+
+  /* Formula search */
+  .formula-search{max-width:480px;margin-bottom:20px;}
+  .formula-search input{width:100%;}
+  .formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+  .formula-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px;
+  }
+  .formula-card .ftag{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--cyan);background:var(--navy);display:inline-block;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+  .formula-card .fname{font-family:'Space Grotesk',sans-serif;font-weight:600;margin-bottom:6px;color:var(--navy);}
+  .formula-card .fexpr{font-family:'JetBrains Mono',monospace;font-size:0.95rem;background:var(--paper);padding:8px 10px;border-radius:6px;}
+  .formula-card .fnote{font-size:0.82rem;color:#697489;margin-top:8px;}
+  .formula-empty{color:#697489;font-size:0.92rem;}
+
+  /* Timer */
+  .timer-box{display:flex;gap:40px;align-items:center;flex-wrap:wrap;}
+  .timer-display{
+    font-family:'JetBrains Mono',monospace;font-size:3.4rem;font-weight:500;color:var(--navy);
+    background:#fff;border:2px solid var(--navy);border-radius:var(--radius);
+    padding:20px 36px;letter-spacing:2px;
+  }
+  .timer-controls{display:flex;gap:10px;flex-wrap:wrap;}
+  .timer-mode{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .timer-status{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#566073;margin-top:10px;}
+
+  footer{
+    padding:30px 5%;text-align:center;color:#697489;font-size:0.85rem;
+    border-top:1px solid var(--line);
+  }
+  footer span{color:var(--cyan);font-family:'JetBrains Mono',monospace;}
+
+  @media(max-width:720px){
+    .hero h1{font-size:2.2rem;}
+    .circuit{display:none;}
+    .timer-display{font-size:2.4rem;padding:16px 24px;}
+  }
+  :focus-visible{outline:3px solid var(--amber);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="node"></span>VidyaBot</div>
+  <nav>
+    <a href="#notes">Concept Notes</a>
+    <a href="#flashcards">Flashcards</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#formulas">Formula Sheet</a>
+    <a href="#timer">Study Timer</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">// engineering exam prep, wired right</span>
+    <h1>Study smarter for every <span>core subject</span>.</h1>
+    <p>VidyaBot bundles quick concept notes, flip-to-revise flashcards, self-graded quizzes, a searchable formula sheet, and a focus timer — everything you need the night before (or weeks before) an exam.</p>
+    <div class="hero-actions">
+      <a href="#notes" class="btn btn-primary">Start revising</a>
+      <a href="#quiz" class="btn btn-ghost">Take a quiz</a>
+    </div>
+  </div>
+  <div class="circuit">
+    <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#0E1F33" stroke-width="2">
+        <path d="M30 40 H120 V100 H220"/>
+        <path d="M30 120 H90 V200 H180"/>
+        <path d="M250 30 V90 H180 V160"/>
+        <path d="M60 220 H150 V160"/>
+      </g>
+      <g fill="#3FD0E0" stroke="#0E1F33" stroke-width="2">
+        <circle cx="30" cy="40" r="6"/>
+        <circle cx="220" cy="100" r="6" class="pulse"/>
+        <circle cx="30" cy="120" r="6"/>
+        <circle cx="180" cy="200" r="6" class="pulse"/>
+        <circle cx="250" cy="30" r="6"/>
+        <circle cx="180" cy="160" r="6" class="pulse"/>
+        <circle cx="60" cy="220" r="6"/>
+      </g>
+      <g fill="#F2A93B">
+        <rect x="100" y="90" width="40" height="20" rx="3"/>
+        <rect x="150" y="150" width="40" height="20" rx="3"/>
+      </g>
+      <text x="105" y="104" font-family="JetBrains Mono" font-size="11" fill="#0E1F33">CPU</text>
+      <text x="155" y="164" font-family="JetBrains Mono" font-size="11" fill="#0E1F33">RAM</text>
+    </svg>
+  </div>
+</section>
+
+<!-- CONCEPT NOTES -->
+<section class="module" id="notes">
+  <div class="module-head"><span class="tag">01</span><h2>Concept Notes</h2></div>
+  <p class="module-sub">Pick a subject and expand a topic for a quick refresher — written for last-minute revision, not first-time learning.</p>
+
+  <div class="subject-tabs" id="subjectTabs"></div>
+  <div class="accordion" id="notesAccordion"></div>
+</section>
+
+<!-- FLASHCARDS -->
+<section class="module" id="flashcards">
+  <div class="module-head"><span class="tag">02</span><h2>Flashcards</h2></div>
+  <p class="module-sub">Click the card to flip between term and definition. Use Prev/Next to move through the deck.</p>
+
+  <div class="flash-controls">
+    <select id="flashSubject"></select>
+  </div>
+  <div class="flash-stage">
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-inner">
+        <div class="flash-face flash-front">
+          <div class="lbl">TERM</div>
+          <div class="txt" id="flashFront">Loading...</div>
+        </div>
+        <div class="flash-face flash-back">
+          <div class="lbl">DEFINITION</div>
+          <div class="txt" id="flashBack">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flash-nav">
+    <button class="btn btn-ghost" id="flashPrev">← Prev</button>
+    <button class="btn btn-primary" id="flashFlip">Flip</button>
+    <button class="btn btn-ghost" id="flashNext">Next →</button>
+  </div>
+  <div class="flash-counter" id="flashCounter"></div>
+</section>
+
+<!-- QUIZ -->
+<section class="module" id="quiz">
+  <div class="module-head"><span class="tag">03</span><h2>Quick Quiz</h2></div>
+  <p class="module-sub">Test yourself with MCQs. Pick a subject, answer, and get instant feedback plus a running score.</p>
+
+  <div class="flash-controls">
+    <select id="quizSubject"></select>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-q" id="quizQuestion">Loading question...</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="feedback" id="quizFeedback"></div>
+    <div class="quiz-foot">
+      <div class="quiz-score" id="quizScore">Score: 0 / 0</div>
+      <button class="btn btn-primary" id="quizNext">Next Question →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULA SHEET -->
+<section class="module" id="formulas">
+  <div class="module-head"><span class="tag">04</span><h2>Formula Sheet</h2></div>
+  <p class="module-sub">Search across core engineering formulas by name or keyword.</p>
+
+  <div class="formula-search">
+    <input type="text" id="formulaSearch" placeholder="Search e.g. 'stress', 'KVL', 'entropy'...">
+  </div>
+  <div class="formula-grid" id="formulaGrid"></div>
+</section>
+
+<!-- TIMER -->
+<section class="module" id="timer">
+  <div class="module-head"><span class="tag">05</span><h2>Study Timer</h2></div>
+  <p class="module-sub">A simple Pomodoro-style timer. Pick a mode, start, and stay on track.</p>
+
+  <div class="timer-box">
+    <div class="timer-display" id="timerDisplay">25:00</div>
+    <div>
+      <div class="timer-controls">
+        <button class="btn btn-primary" id="timerStart">Start</button>
+        <button class="btn btn-ghost" id="timerPause">Pause</button>
+        <button class="btn btn-ghost" id="timerReset">Reset</button>
+      </div>
+      <div class="timer-mode">
+        <button class="subject-tab active" data-mins="25">Focus 25</button>
+        <button class="subject-tab" data-mins="50">Focus 50</button>
+        <button class="subject-tab" data-mins="5">Short Break 5</button>
+        <button class="subject-tab" data-mins="15">Long Break 15</button>
+      </div>
+      <div class="timer-status" id="timerStatus">Ready when you are.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built for engineering students, by <span>VidyaBot</span> — revise smarter, not longer.
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const DATA = {
+  "Engineering Mathematics": {
+    notes: [
+      {t:"Eigenvalues & Eigenvectors", c:"<p>For a square matrix <code>A</code>, a non-zero vector <code>v</code> is an eigenvector if <code>Av = λv</code>, where <code>λ</code> is the eigenvalue.</p><ul><li>Find λ from <code>det(A − λI) = 0</code> (characteristic equation)</li><li>Sum of eigenvalues = trace(A)</li><li>Product of eigenvalues = det(A)</li></ul>"},
+      {t:"Laplace Transform Basics", c:"<p>Converts a time-domain function into the s-domain: <code>L{f(t)} = ∫₀^∞ e^(−st) f(t) dt</code>.</p><ul><li>L{1} = 1/s</li><li>L{e^(at)} = 1/(s−a)</li><li>L{sin(at)} = a/(s²+a²)</li><li>Useful for solving linear ODEs with initial conditions.</li></ul>"},
+      {t:"Partial Differential Equations", c:"<p>Common PDEs in engineering:</p><ul><li>Heat equation: <code>∂u/∂t = α ∂²u/∂x²</code></li><li>Wave equation: <code>∂²u/∂t² = c² ∂²u/∂x²</code></li><li>Laplace's equation: <code>∇²u = 0</code> (steady-state, no source)</li></ul>"}
+    ],
+    flash: [
+      {f:"Rank of a matrix", b:"Maximum number of linearly independent rows (or columns) in the matrix."},
+      {f:"Eigenvalue", b:"Scalar λ such that Av = λv for some non-zero vector v."},
+      {f:"Fourier Series", b:"Representation of a periodic function as a sum of sines and cosines."},
+      {f:"Determinant = 0 means", b:"Matrix is singular (non-invertible); rows/columns are linearly dependent."}
+    ],
+    quiz: [
+      {q:"If A is a 3×3 matrix with det(A)=0, A is:", o:["Invertible","Singular","Symmetric","Orthogonal"], a:1},
+      {q:"Laplace transform of e^(at) is:", o:["s/(s-a)","1/(s-a)","a/(s²+a²)","1/s²"], a:1},
+      {q:"The Laplace equation ∇²u = 0 describes:", o:["Wave propagation","Heat diffusion over time","Steady-state potential fields","Random motion"], a:2}
+    ]
+  },
+  "Electrical Engineering": {
+    notes: [
+      {t:"Kirchhoff's Laws", c:"<p><b>KCL:</b> Sum of currents entering a node = sum leaving it.</p><p><b>KVL:</b> Sum of voltage drops around any closed loop = 0.</p><p>Used to analyze any resistive or reactive circuit network.</p>"},
+      {t:"Thevenin & Norton Equivalents", c:"<p>Any linear two-terminal network can be reduced to:</p><ul><li><b>Thevenin:</b> a voltage source V_th in series with R_th</li><li><b>Norton:</b> a current source I_N in parallel with R_N</li></ul><p>R_th = R_N, and V_th = I_N × R_th.</p>"},
+      {t:"AC Power & Power Factor", c:"<p>Apparent power <code>S = VI</code>, real power <code>P = VI cosφ</code>, reactive power <code>Q = VI sinφ</code>.</p><p>Power factor <code>cosφ = P/S</code>. A low power factor means more current is needed for the same real power, increasing losses.</p>"}
+    ],
+    flash: [
+      {f:"Ohm's Law", b:"V = IR — voltage equals current times resistance."},
+      {f:"KCL", b:"Algebraic sum of currents at a node is zero."},
+      {f:"Power Factor", b:"Ratio of real power to apparent power, cosφ."},
+      {f:"Resonance in RLC circuit", b:"Occurs when XL = XC, giving minimum impedance (series) at ω = 1/√(LC)."}
+    ],
+    quiz: [
+      {q:"Power factor is the cosine of the angle between:", o:["Voltage and resistance","Voltage and current","Current and impedance","Frequency and time"], a:1},
+      {q:"In a series RLC circuit at resonance, impedance is:", o:["Maximum","Zero","Equal to R (minimum)","Infinite"], a:2},
+      {q:"Thevenin's theorem reduces a network to a:", o:["Current source with parallel R","Voltage source with series R","Pure resistor","Open circuit"], a:1}
+    ]
+  },
+  "Mechanical Engineering": {
+    notes: [
+      {t:"Stress and Strain", c:"<p>Stress <code>σ = F/A</code> (force per unit area). Strain <code>ε = ΔL/L</code> (fractional deformation).</p><p>Young's Modulus <code>E = σ/ε</code> within the elastic limit (Hooke's Law).</p>"},
+      {t:"Thermodynamics: First Law", c:"<p><code>ΔU = Q − W</code> — change in internal energy equals heat added minus work done by the system.</p><p>For an ideal gas, <code>PV = nRT</code>, and processes are classified as isothermal, adiabatic, isobaric, or isochoric.</p>"},
+      {t:"Types of Beams & Loading", c:"<p>Common beam types: simply supported, cantilever, fixed, overhanging.</p><p>Bending equation: <code>σ/y = M/I = E/R</code>, where M = bending moment, I = moment of inertia, R = radius of curvature.</p>"}
+    ],
+    flash: [
+      {f:"Young's Modulus", b:"Ratio of stress to strain in the elastic region; measures stiffness."},
+      {f:"First Law of Thermodynamics", b:"Energy is conserved: ΔU = Q − W."},
+      {f:"Cantilever Beam", b:"A beam fixed at one end and free at the other."},
+      {f:"Adiabatic Process", b:"A thermodynamic process with no heat transfer (Q = 0)."}
+    ],
+    quiz: [
+      {q:"Young's Modulus is the ratio of:", o:["Force to area","Stress to strain","Mass to volume","Work to time"], a:1},
+      {q:"In an adiabatic process:", o:["ΔU = 0","Q = 0","W = 0","P = constant"], a:1},
+      {q:"The bending equation relates M, I, σ, y and:", o:["Density","Velocity","E and R","Pressure"], a:2}
+    ]
+  },
+  "Computer Science": {
+    notes: [
+      {t:"Time Complexity Basics", c:"<p>Big-O describes the worst-case growth rate of an algorithm's running time.</p><ul><li>O(1): constant — array access</li><li>O(log n): binary search</li><li>O(n): linear scan</li><li>O(n log n): merge sort, quick sort (avg)</li><li>O(n²): nested loops, bubble sort</li></ul>"},
+      {t:"OSI Model Layers", c:"<p>7 layers (top to bottom): Application, Presentation, Session, Transport, Network, Data Link, Physical.</p><p>Mnemonic: <i>All People Seem To Need Data Processing.</i></p>"},
+      {t:"Normalization (DBMS)", c:"<p>Reduces data redundancy by organizing tables.</p><ul><li><b>1NF:</b> atomic values, no repeating groups</li><li><b>2NF:</b> 1NF + no partial dependency on a composite key</li><li><b>3NF:</b> 2NF + no transitive dependency</li></ul>"}
+    ],
+    flash: [
+      {f:"Big-O of binary search", b:"O(log n) — halves the search space each step."},
+      {f:"Stack vs Queue", b:"Stack is LIFO (Last In First Out); Queue is FIFO (First In First Out)."},
+      {f:"Deadlock", b:"A state where processes are stuck waiting for resources held by each other, with no progress possible."},
+      {f:"Primary Key", b:"A column (or set of columns) that uniquely identifies each row in a table."}
+    ],
+    quiz: [
+      {q:"Time complexity of merge sort is:", o:["O(n)","O(n log n)","O(n²)","O(log n)"], a:1},
+      {q:"Which data structure is FIFO?", o:["Stack","Queue","Tree","Graph"], a:1},
+      {q:"3NF requires elimination of:", o:["Atomic values","Partial dependency","Transitive dependency","Foreign keys"], a:2}
+    ]
+  }
+};
+
+const FORMULAS = [
+  {subject:"Mechanical", name:"Stress", expr:"σ = F / A", note:"Force per unit cross-sectional area."},
+  {subject:"Mechanical", name:"Strain", expr:"ε = ΔL / L", note:"Fractional change in length."},
+  {subject:"Mechanical", name:"Young's Modulus", expr:"E = σ / ε", note:"Valid within elastic limit (Hooke's Law)."},
+  {subject:"Mechanical", name:"Bending Equation", expr:"σ/y = M/I = E/R", note:"Relates bending stress to moment and curvature."},
+  {subject:"Thermodynamics", name:"First Law", expr:"ΔU = Q − W", note:"Energy conservation for a closed system."},
+  {subject:"Thermodynamics", name:"Ideal Gas Law", expr:"PV = nRT", note:"Relates pressure, volume, temperature, and moles."},
+  {subject:"Thermodynamics", name:"Entropy Change (reversible)", expr:"ΔS = Q / T", note:"For a reversible heat transfer at temperature T."},
+  {subject:"Electrical", name:"Ohm's Law", expr:"V = IR", note:"Voltage equals current times resistance."},
+  {subject:"Electrical", name:"Kirchhoff's Voltage Law", expr:"ΣV = 0", note:"Sum of voltages around a closed loop is zero."},
+  {subject:"Electrical", name:"Kirchhoff's Current Law", expr:"ΣI_in = ΣI_out", note:"Current entering a node equals current leaving."},
+  {subject:"Electrical", name:"Real Power", expr:"P = VI cosφ", note:"φ is the phase angle between V and I."},
+  {subject:"Electrical", name:"Resonant Frequency (RLC)", expr:"f = 1 / (2π√(LC))", note:"Frequency at which XL = XC."},
+  {subject:"Mathematics", name:"Characteristic Equation", expr:"det(A − λI) = 0", note:"Used to find eigenvalues of matrix A."},
+  {subject:"Mathematics", name:"Laplace of Exponential", expr:"L{e^(at)} = 1/(s−a)", note:"s > a for convergence."},
+  {subject:"Mathematics", name:"Standard Deviation", expr:"σ = √(Σ(x−x̄)² / n)", note:"Measure of data spread around the mean."},
+  {subject:"CS", name:"Binary Search Complexity", expr:"O(log n)", note:"Halves the search interval each step."},
+  {subject:"CS", name:"Number of Subnets", expr:"2^n (n = borrowed bits)", note:"From subnetting host portion of IP address."},
+  {subject:"Fluid Mechanics", name:"Bernoulli's Equation", expr:"P + ½ρv² + ρgh = constant", note:"Energy conservation along a streamline."},
+  {subject:"Fluid Mechanics", name:"Reynolds Number", expr:"Re = ρvD / μ", note:"Re < 2300 → laminar; Re > 4000 → turbulent."}
+];
+
+/* ============ NOTES (Accordion) ============ */
+const subjects = Object.keys(DATA);
+let currentSubject = subjects[0];
+
+const subjectTabs = document.getElementById('subjectTabs');
+subjects.forEach(s => {
+  const btn = document.createElement('button');
+  btn.className = 'subject-tab' + (s === currentSubject ? ' active' : '');
+  btn.textContent = s;
+  btn.addEventListener('click', () => {
+    currentSubject = s;
+    document.querySelectorAll('#subjectTabs .subject-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderNotes();
+  });
+  subjectTabs.appendChild(btn);
+});
+
+function renderNotes(){
+  const acc = document.getElementById('notesAccordion');
+  acc.innerHTML = '';
+  DATA[currentSubject].notes.forEach((item, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'acc-item';
+    wrap.innerHTML = `
+      <button class="acc-head" aria-expanded="false">
+        <span>${item.t}</span><span class="arrow">+</span>
+      </button>
+      <div class="acc-body">${item.c}</div>
+    `;
+    const head = wrap.querySelector('.acc-head');
+    const body = wrap.querySelector('.acc-body');
+    head.addEventListener('click', () => {
+      const isOpen = wrap.classList.contains('open');
+      if(isOpen){
+        wrap.classList.remove('open');
+        body.style.maxHeight = null;
+        head.setAttribute('aria-expanded','false');
+      } else {
+        wrap.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        head.setAttribute('aria-expanded','true');
+      }
+    });
+    acc.appendChild(wrap);
+  });
+}
+renderNotes();
+
+/* ============ FLASHCARDS ============ */
+const flashSubjectSel = document.getElementById('flashSubject');
+subjects.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  flashSubjectSel.appendChild(opt);
+});
+let flashIndex = 0;
+const flashcardEl = document.getElementById('flashcard');
+const flashFront = document.getElementById('flashFront');
+const flashBack = document.getElementById('flashBack');
+const flashCounter = document.getElementById('flashCounter');
+
+function renderFlash(){
+  const deck = DATA[flashSubjectSel.value].flash;
+  const card = deck[flashIndex];
+  flashFront.textContent = card.f;
+  flashBack.textContent = card.b;
+  flashcardEl.classList.remove('flipped');
+  flashCounter.textContent = `Card ${flashIndex+1} of ${deck.length} — ${flashSubjectSel.value}`;
+}
+flashcardEl.addEventListener('click', () => flashcardEl.classList.toggle('flipped'));
+document.getElementById('flashFlip').addEventListener('click', () => flashcardEl.classList.toggle('flipped'));
+document.getElementById('flashNext').addEventListener('click', () => {
+  const deck = DATA[flashSubjectSel.value].flash;
+  flashIndex = (flashIndex + 1) % deck.length;
+  renderFlash();
+});
+document.getElementById('flashPrev').addEventListener('click', () => {
+  const deck = DATA[flashSubjectSel.value].flash;
+  flashIndex = (flashIndex - 1 + deck.length) % deck.length;
+  renderFlash();
+});
+flashSubjectSel.addEventListener('change', () => { flashIndex = 0; renderFlash(); });
+renderFlash();
+
+/* ============ QUIZ ============ */
+const quizSubjectSel = document.getElementById('quizSubject');
+subjects.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  quizSubjectSel.appendChild(opt);
+});
+let quizIndex = 0, score = 0, attempted = 0, answered = false;
+
+function renderQuiz(){
+  const set = DATA[quizSubjectSel.value].quiz;
+  const q = set[quizIndex];
+  document.getElementById('quizQuestion').textContent = q.q;
+  const optsBox = document.getElementById('quizOptions');
+  optsBox.innerHTML = '';
+  answered = false;
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizFeedback').className = 'feedback';
+
+  q.o.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = opt;
+    b.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      attempted++;
+      const allOpts = optsBox.querySelectorAll('.quiz-opt');
+      allOpts.forEach(o => o.disabled = true);
+      if(i === q.a){
+        b.classList.add('correct');
+        score++;
+        document.getElementById('quizFeedback').textContent = 'Correct! ✓';
+        document.getElementById('quizFeedback').className = 'feedback ok';
+      } else {
+        b.classList.add('wrong');
+        allOpts[q.a].classList.add('correct');
+        document.getElementById('quizFeedback').textContent = 'Not quite — correct answer highlighted.';
+        document.getElementById('quizFeedback').className = 'feedback bad';
+      }
+      updateScore();
+    });
+    optsBox.appendChild(b);
+  });
+}
+function updateScore(){
+  document.getElementById('quizScore').textContent = `Score: ${score} / ${attempted}`;
+}
+document.getElementById('quizNext').addEventListener('click', () => {
+  const set = DATA[quizSubjectSel.value].quiz;
+  quizIndex = (quizIndex + 1) % set.length;
+  renderQuiz();
+});
+quizSubjectSel.addEventListener('change', () => { quizIndex = 0; renderQuiz(); });
+renderQuiz();
+updateScore();
+
+/* ============ FORMULA SEARCH ============ */
+const formulaGrid = document.getElementById('formulaGrid');
+const formulaSearch = document.getElementById('formulaSearch');
+
+function renderFormulas(filter = ''){
+  formulaGrid.innerHTML = '';
+  const f = filter.trim().toLowerCase();
+  const matches = FORMULAS.filter(item =>
+    item.name.toLowerCase().includes(f) ||
+    item.subject.toLowerCase().includes(f) ||
+    item.note.toLowerCase().includes(f) ||
+    item.expr.toLowerCase().includes(f)
+  );
+  if(matches.length === 0){
+    formulaGrid.innerHTML = '<p class="formula-empty">No formulas match your search. Try a different keyword.</p>';
+    return;
+  }
+  matches.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'formula-card';
+    card.innerHTML = `
+      <div class="ftag">${item.subject}</div>
+      <div class="fname">${item.name}</div>
+      <div class="fexpr">${item.expr}</div>
+      <div class="fnote">${item.note}</div>
+    `;
+    formulaGrid.appendChild(card);
+  });
+}
+formulaSearch.addEventListener('input', e => renderFormulas(e.target.value));
+renderFormulas();
+
+/* ============ TIMER ============ */
+let totalSeconds = 25 * 60;
+let remaining = totalSeconds;
+let timerInterval = null;
+const timerDisplay = document.getElementById('timerDisplay');
+const timerStatus = document.getElementById('timerStatus');
+
+function formatTime(s){
+  const m = Math.floor(s/60).toString().padStart(2,'0');
+  const sec = (s%60).toString().padStart(2,'0');
+  return `${m}:${sec}`;
+}
+function updateTimerDisplay(){
+  timerDisplay.textContent = formatTime(remaining);
+}
+document.getElementById('timerStart').addEventListener('click', () => {
+  if(timerInterval) return;
+  timerStatus.textContent = 'Focus mode running...';
+  timerInterval = setInterval(() => {
+    if(remaining <= 0){
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerStatus.textContent = "Time's up! Take a short break.";
+      return;
+    }
+    remaining--;
+    updateTimerDisplay();
+  }, 1000);
+});
+document.getElementById('timerPause').addEventListener('click', () => {
+  if(timerInterval){
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerStatus.textContent = 'Paused.';
+  }
+});
+document.getElementById('timerReset').addEventListener('click', () => {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  remaining = totalSeconds;
+  updateTimerDisplay();
+  timerStatus.textContent = 'Ready when you are.';
+});
+document.querySelectorAll('.timer-mode .subject-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.timer-mode .subject-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    clearInterval(timerInterval);
+    timerInterval = null;
+    totalSeconds = parseInt(btn.dataset.mins) * 60;
+    remaining = totalSeconds;
+    updateTimerDisplay();
+    timerStatus.textContent = `Set to ${btn.dataset.mins} minutes. Ready.`;
+  });
+});
+updateTimerDisplay();
+</script>
+
+<!-- Chatbot Widget -->
+<script src='https://www.noupe.com/embed/019eca8865ed72939c344aab8118f06d63e2.js'></script>
+</body>
+</html>
